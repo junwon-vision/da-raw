@@ -1,0 +1,5 @@
+val_daytime_foggy_010134
+val_daytime_foggy_010419
+val_daytime_foggy_010541
+val_daytime_foggy_011133
+val_daytime_foggy_011185

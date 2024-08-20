@@ -1,0 +1,19 @@
+# Detectron2 related
+docs/
+figures/
+projects/
+
+# Config
+# configs/
+# !configs/PascalVOC-Detection/
+# !configs/Base-RCNN-C4.yaml
+# !configs/Base-RCNN-FPN.yaml
+# !configs/Base-RCNN-FPN-DA.yaml
+
+# Datasets
+datasets/test_*
+datasets/VOC2007/Annotations/*
+datasets/VOC2007/JPEGImages/*
+datasets/bdd100k_*
+
+# Tools

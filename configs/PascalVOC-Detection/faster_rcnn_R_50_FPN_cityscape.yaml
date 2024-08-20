@@ -1,0 +1,24 @@
+_BASE_: "../Base-RCNN-FPN.yaml"
+MODEL:
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: False
+  PIXEL_MEAN: [103.530, 116.280, 123.675]
+  RESNETS:
+    DEPTH: 50
+  ROI_HEADS:
+    NUM_CLASSES: 8
+INPUT:
+  MIN_SIZE_TRAIN: (800,) #(480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
+  MIN_SIZE_TEST: 800
+  MAX_SIZE_TRAIN: 1600
+DATASETS:
+  TRAIN: ('voc_2007_train',)
+  TEST: ('voc_2007_test',)
+SOLVER:
+  STEPS: (60000,75000)
+  MAX_ITER: 100000  # 17.4 epochs
+  WARMUP_ITERS: 100
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.0025
+OUTPUT_DIR: "./output_foggy_oracle_2"
+SEED: 100

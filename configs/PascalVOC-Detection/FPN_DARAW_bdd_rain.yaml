@@ -1,0 +1,68 @@
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN_DA"
+  BACKBONE:
+    NAME: "build_resnet_fpn_backbone"
+  # WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  WEIGHTS: "/home/appuser/detectron2_repo/tools/model_0007499.pth"
+  MASK_ON: False
+  PIXEL_MEAN: [103.530, 116.280, 123.675]
+  RESNETS:
+    DEPTH: 50
+    OUT_FEATURES: ["stem","res2", "res3", "res4", "res5"]
+    NORM: "FrozenBN"
+  FPN:
+    IN_FEATURES: ["res2", "res3", "res4", "res5"]
+  ANCHOR_GENERATOR:
+    SIZES: [[32], [64], [128], [256], [512]]  # One size for each in feature map
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]  # Three aspect ratios (same for all in feature maps)
+  RPN:
+    IN_FEATURES: ["p2", "p3", "p4", "p5", "p6"]
+    PRE_NMS_TOPK_TRAIN: 2000  # Per FPN level
+    PRE_NMS_TOPK_TEST: 1000  # Per FPN level
+    POST_NMS_TOPK_TRAIN: 1000
+    POST_NMS_TOPK_TEST: 1000
+  ROI_HEADS:
+    NAME: "StandardROIHeads_DA"
+    IN_FEATURES: ["p2", "p3", "p4", "p5"]
+    NUM_CLASSES: 8
+  ROI_BOX_HEAD:
+    NAME: "FastRCNNConvFCHead"
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+  DA:
+    ADAPT_LEVEL: "image" # 'inst', 'imginst', 'all'
+    IMG_CLS: "pixel"
+    CBAM: True
+    IMG_WEIGHT: 1.0
+    ALPHA_1: 0.01
+    ALPHA_2: 0.1
+    COS_WEIGHT: 0.1
+    DA_APPLY_LAYER: ['p4', 'p5'] #['p2', 'p3', 'p4', 'p5']
+  CL:
+    MODE: 'per_class_prototype' # None, 'contrast', 'prototype'
+    CONTRAST_WEIGHT: 1.0
+    CONTRAST_TEMP: 0.07
+    CONTRAST_SCORE_THRESHOLD: 0.8
+    NUM_PROTOTYPE: 5
+    USE_INST_AFTER_NMS: True
+    USE_SOURCE: True
+    SCORE_ATT: False
+    CONTRAST_LAYER: [0,1] #[0,1,2,3]
+DATASETS:
+  TRAIN: ('voc_2007_train_t_bddrain',)
+  TRAIN_TARGET: ('voc_2007_train_t_bddrain',) #('voc_2007_train_t_taodacrain',) # 
+  TEST: ('voc_2007_test_bddrain',) #('voc_2007_test_taodacrain',) #('voc_2007_test_bddrain',) #('voc_2007_test_taodacrain',) # 'voc_2007_test_clear',
+SOLVER:
+  STEPS: (17500,)
+  MAX_ITER: 19000  # 17.4 epochs
+  WARMUP_ITERS: 100
+  CONTRAST_LOSS_ITER: 0 #3750
+  CHECKPOINT_PERIOD: 2500
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.0025
+OUTPUT_DIR: "./output_bddrain_DARAW"
+VERSION: 2
+SEED: 200
+TEST:
+  EVAL_PERIOD: 1000
+VIS_PERIOD: 0
